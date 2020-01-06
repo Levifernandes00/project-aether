@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { View, SafeAreaView, StyleSheet, Text, Animated } from 'react-native';
+import { Feather } from '@expo/vector-icons'
 
 
 export default function FirstText({ disappear, time }) {
 
-    const [fadeAnim] = useState(new Animated.Value(1)); // Initial value for opacity: 0
+    const [fadeAnim] = useState(new Animated.Value(1));
 
     useEffect(()=>{
         if(disappear){
@@ -24,6 +25,8 @@ export default function FirstText({ disappear, time }) {
 
     }, [disappear]);
 
+
+
   return (
     <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
 
@@ -33,6 +36,7 @@ export default function FirstText({ disappear, time }) {
         
         <View style={styles.subtitleContainer}>
             <Text style={styles.subtitle}>Find the nearest startup to work </Text>
+            <Feather name="arrow-right" size={34} color='#FFF' style={{ marginTop: 'auto' }} />
         </View>
 
     </Animated.View>
@@ -44,7 +48,7 @@ const styles = StyleSheet.create({
     container: {
         padding: 0,
         flex: 1,
-        zIndex: 1,
+        zIndex: 20,
     },
 
     titleContainer:{
@@ -64,17 +68,19 @@ const styles = StyleSheet.create({
 
 
     subtitleContainer: {
-        marginTop: 'auto',
-        marginBottom: 50,
+        position: 'absolute',
+        height: '100%',
+        width: '80%',
+        flexDirection: 'row',
+        paddingBottom: 30,
     },
 
     subtitle: {
-        zIndex: 10,
         color: '#FFF',
         fontSize: 25,
         width: 200,
         textAlign: 'left',
         marginLeft: 30,
-
+        marginTop: 'auto',
     },
 });

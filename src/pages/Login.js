@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, View, Image, StyleSheet, Text, Animated, TouchableOpacity } from 'react-native';
+import { SafeAreaView, View, Image, StyleSheet, Text, Animated, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 
 import logomarca from '../assets/logomarca.png';
 import fundo from '../assets/fundo.png';
@@ -14,31 +14,13 @@ export default function Login() {
     const [balaoTranslation] = useState(new Animated.Value(70));
     const [shapeTranslation] = useState(new Animated.Value(200));
     const [disappear, setDisappear] = useState(false);
+    const [appear, setAppear] = useState(false);
     const time = 5000;
 
+    const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
     // useEffect(()=>{
-    //     setDisappear(true);
-
-    //     Animated.timing(balaoTranslation, {
-    //         toValue: -1000,
-    //         duration: 1000,
-    //     }).start();
+    //     handleChanges()
     // }, []);
-
-
-    function reset(){
-        Animated.timing(balaoTranslation, {
-            toValue: 70,
-            duration: time,
-        }).start();
-
-        Animated.timing(shapeTranslation, {
-            toValue: 200,
-            duration: time,
-        }).start();
-
-        setDisappear(false);
-    }
 
     function handleChanges(){
         Animated.timing(balaoTranslation, {
@@ -47,26 +29,31 @@ export default function Login() {
         }).start();
 
         Animated.timing(shapeTranslation, {
-            toValue: 500,
+            toValue: 530,
             duration: time,
         }).start();
 
         setDisappear(true);
+
+        setTimeout(() => setAppear(true), 2500);
     }
   
     return (
-        <SafeAreaView style={styles.container}>
+        <KeyboardAvoidingView behavior="padding" style={styles.container}>
         
             <Image style={styles.logo} source={logomarca}  />
 
         
-            <FirstText disappear={disappear} time={2000}/>
-            <Join />
-
-            <TouchableOpacity onPress={handleChanges} style={{ height: 50, width: 50, backgroundColor: 'grey' }}>
-                <Text>Mudar</Text>
+            <TouchableOpacity 
+                style={{ position: 'absolute', flex: 1, height: '100%', width: '100%', paddingTop: 50}}
+                onPress={handleChanges}    
+            >
+                <FirstText disappear={disappear} time={2000}/>
             </TouchableOpacity>
 
+            <Join appear={appear} time={2500} />
+
+            
             <View style={styles.balaoContainer}>
                 <Animated.View style={{ marginTop: balaoTranslation }}>
                     <Image style={styles.balao} source={balao} />
@@ -77,7 +64,7 @@ export default function Login() {
                 <Image source={fundo} />
             </Animated.View>
 
-        </SafeAreaView>
+        </KeyboardAvoidingView>
     );
 }
 
