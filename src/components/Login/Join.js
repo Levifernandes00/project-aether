@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { View, Animated, StyleSheet, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Dimensions } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons'
+import { FontAwesome } from '@expo/vector-icons';
+import * as firebase from 'firebase';
 
 // import { Container } from './styles';
 
-export default function Join({ appear, time }) {
+export default function Join({ appear, time, navigation }) {
     const [fadeAnim] = useState(new Animated.Value(0));
     const [heightAnim] = useState(new Animated.Value(0));
 
-    const {height, width} = Dimensions.get('window');
+    const {height} = Dimensions.get('window');
 
     useEffect(()=>{
         if(appear){
@@ -36,11 +37,6 @@ export default function Join({ appear, time }) {
     function handleSignIn() {
         
     };
-
-    function handleForgotten() {
-
-    };
-
 
   return (
     <Animated.View style={[styles.container, { opacity: fadeAnim, height: heightAnim }]}>
@@ -70,21 +66,16 @@ export default function Join({ appear, time }) {
                 autoCorrect={false}    
             />
 
-            <TouchableOpacity style={styles.button}>
-                <Text style={styles.buttonText}>Log in</Text>
-            </TouchableOpacity>
-
-            <View style={{ marginTop: 30 }}>
-                <TouchableOpacity onPress={handleForgotten}>
-                    <Text style={styles.subtext}>Forgot your passoword?</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={handleSignIn}>
-                    <Text style={styles.subtext}>Don't have account yet? <Text style={styles.signin}>Sing in</Text></Text>
-                </TouchableOpacity>
-            </View>
         </KeyboardAvoidingView>
 
+        <TouchableOpacity style={styles.button} onPress={handleSignIn}>
+                <Text style={styles.buttonText}>Log in</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.singUpButton} onPress={()=> navigation.navigate("Register")} >
+            <Text style={styles.subtext}>Don't have account yet? <Text style={styles.signin}>Sing Up</Text></Text>
+        </TouchableOpacity>
+            
     </Animated.View>
   );
 }
@@ -153,6 +144,11 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
         color:'#403BEB',
+    },
+
+    singUpButton: { 
+       alignSelf: 'center',
+       marginTop: 20,
     },
 
 });

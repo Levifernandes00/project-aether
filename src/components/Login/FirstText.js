@@ -6,8 +6,10 @@ import { Feather } from '@expo/vector-icons'
 export default function FirstText({ disappear, time }) {
 
     const [fadeAnim] = useState(new Animated.Value(1));
+    const [heightAnim] = useState(new Animated.Value(100));
 
     useEffect(()=>{
+
         if(disappear){
             Animated.timing(fadeAnim, {
                 toValue: 0,
@@ -25,7 +27,13 @@ export default function FirstText({ disappear, time }) {
 
     }, [disappear]);
 
+    function setHeight(){
+        const heightA = heightAnim ? `${heightAnim}%` : '0%';
 
+        return {
+            height: heightA,
+        }
+    };
 
   return (
     <Animated.View style={[styles.container, { opacity: fadeAnim }]}>

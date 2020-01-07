@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, View, Image, StyleSheet, Text, Animated, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
+import { SafeAreaView, View, Image, StyleSheet, Text, Animated, TouchableOpacity, KeyboardAvoidingView, Dimensions } from 'react-native';
 
 import logomarca from '../assets/logomarca.png';
 import fundo from '../assets/fundo.png';
@@ -10,18 +10,14 @@ import Join from '../components/Login/Join';
 
 
 
-export default function Login() {
+export default function Login({ navigation }) {
     const [balaoTranslation] = useState(new Animated.Value(70));
     const [shapeTranslation] = useState(new Animated.Value(200));
     const [disappear, setDisappear] = useState(false);
     const [appear, setAppear] = useState(false);
     const time = 5000;
 
-    const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
-    // useEffect(()=>{
-    //     handleChanges()
-    // }, []);
-
+    
     function handleChanges(){
         Animated.timing(balaoTranslation, {
             toValue: -500,
@@ -43,16 +39,18 @@ export default function Login() {
         
             <Image style={styles.logo} source={logomarca}  />
 
-        
-            <TouchableOpacity 
-                style={{ position: 'absolute', flex: 1, height: '100%', width: '100%', paddingTop: 50}}
-                onPress={handleChanges}    
-            >
-                <FirstText disappear={disappear} time={2000}/>
-            </TouchableOpacity>
 
-            <Join appear={appear} time={2500} />
+            { !disappear &&
+                (<TouchableOpacity 
+                    style={{ position: 'absolute', flex: 1, height: '100%', width: '100%', paddingTop: 50}}
+                    onPress={handleChanges}    
+                >
+                    <FirstText disappear={disappear} time={2000}/>
+                </TouchableOpacity>)
+            }
 
+            <Join appear={appear} time={2500} navigation={navigation}/>
+    
             
             <View style={styles.balaoContainer}>
                 <Animated.View style={{ marginTop: balaoTranslation }}>
