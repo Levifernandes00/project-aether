@@ -24,8 +24,13 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "com.brasilvip.upn",
       "supportsTablet": true
     },
+    "android": {
+      "package": "com.brasilvip.upn"
+    },
+
     "description": ""
   }
 }
