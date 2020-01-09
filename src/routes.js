@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-import {  } from "react-native";
-import {  } from 'react-natigation';
-=======
 import { createAppContainer, createSwitchNavigator} from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 import { createBottomTabNavigator } from "react-navigation-tabs";
@@ -51,4 +47,3 @@ const Routes = createAppContainer(
 );
 
 export default Routes;
->>>>>>> ece09a38895766b4b7cf8992cae8036e2d093b5e

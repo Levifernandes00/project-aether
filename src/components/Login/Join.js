@@ -72,8 +72,13 @@ export default function Join({ appear, time, navigation }) {
                 <Text style={styles.buttonText}>Log in</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.singUpButton} onPress={()=> navigation.navigate("Register")} >
-            <Text style={styles.subtext}>Don't have account yet? <Text style={styles.signin}>Sing Up</Text></Text>
+        <TouchableOpacity 
+            style={styles.singUpButton} 
+            onPress={()=> navigation.navigate("Register")} 
+        >
+            <Text style={styles.subtext}>Don't have account yet? 
+                <Text style={styles.signin}>Sing Up</Text>
+            </Text>
         </TouchableOpacity>
             
     </Animated.View>
