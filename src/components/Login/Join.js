@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { View, Animated, StyleSheet, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Dimensions } from 'react-native';
+import { withNavigation } from "react-navigation";
 import { FontAwesome } from '@expo/vector-icons';
 import * as firebase from 'firebase';
 
 // import { Container } from './styles';
 
-export default function Join({ appear, time, navigation }) {
+function Join({ appear, time, navigation }) {
     const [fadeAnim] = useState(new Animated.Value(0));
     const [heightAnim] = useState(new Animated.Value(0));
 
@@ -72,7 +73,7 @@ export default function Join({ appear, time, navigation }) {
                 <Text style={styles.buttonText}>Log in</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.singUpButton} onPress={()=> navigation.navigate("Register")} >
+        <TouchableOpacity style={styles.singUpButton} onPress={()=> navigation.navigate("RegisterProfile")} >
             <Text style={styles.subtext}>Don't have account yet? <Text style={styles.signin}>Sing Up</Text></Text>
         </TouchableOpacity>
             
@@ -152,3 +153,5 @@ const styles = StyleSheet.create({
     },
 
 });
+
+export default withNavigation(Join);

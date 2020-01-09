@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
 
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, StatusBar } from 'react-native';
 
 // import { Container } from './styles';
 
-export default class Register extends Component {
+export default class RegisterProfile extends Component {
+  state = {
+
+  };
+  
   render() {
     return (
         <View style={styles.container}>

@@ -1,22 +1,44 @@
-<<<<<<< HEAD
-import {  } from "react-native";
-import {  } from 'react-natigation';
-=======
 import { createAppContainer, createSwitchNavigator} from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
-import { createBottomTabNavigator } from "react-navigation-tabs";
+import { createBottomTabNavigator, createMaterialTopTabNavigator } from "react-navigation-tabs";
+
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
-import Register from "./pages/Register";
+import RegisterProfile from "./pages/RegisterProfile";
+import RegisterStartup from "./pages/RegisterStartup";
 import Explore from "./pages/Explore";
 import Chat from "./pages/Chat";
 
 
+const registerTab = createMaterialTopTabNavigator(
+    {
+        Profile: RegisterProfile,
+        Startup: RegisterStartup
+    },
+    {
+        tabBarOptions: {
+           
+            activeTintColor: 'blue',
+            inactiveTintColor: '#999',
+            tabStyle: { 
+                paddingTop: 30,
+                backgroundColor: '#F5F5F5',
+            },
+            labelStyle: { 
+                fontSize: 14,
+                
+            },
+        },
+        
+    }
+);
+
+
 const authStack = createStackNavigator(
     {
+        registerTab,
         Login,
-        Register,
     },
     {
         headerMode: 'none',
@@ -51,4 +73,3 @@ const Routes = createAppContainer(
 );
 
 export default Routes;
->>>>>>> ece09a38895766b4b7cf8992cae8036e2d093b5e
