@@ -8,14 +8,15 @@ import balao from '../assets/balao.png';
 import FirstText from "../components/Login/FirstText";
 import Join from '../components/Login/Join';
 
-
+import * as firebase from 'firebase';
 
 export default function Login({ navigation }) {
     const [balaoTranslation] = useState(new Animated.Value(70));
     const [shapeTranslation] = useState(new Animated.Value(200));
     const [disappear, setDisappear] = useState(false);
     const [appear, setAppear] = useState(false);
-    const time = 5000;
+    const time = 4000;
+
 
     
     function handleChanges(){

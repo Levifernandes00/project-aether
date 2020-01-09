@@ -1,6 +1,8 @@
+import React from 'react';
 import { createAppContainer, createSwitchNavigator} from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 import { createBottomTabNavigator, createMaterialTopTabNavigator } from "react-navigation-tabs";
+import { MaterialIcons, Entypo } from '@expo/vector-icons';
 
 
 import Home from "./pages/Home";
@@ -9,6 +11,8 @@ import RegisterProfile from "./pages/RegisterProfile";
 import RegisterStartup from "./pages/RegisterStartup";
 import Explore from "./pages/Explore";
 import Chat from "./pages/Chat";
+import Loading from "./pages/Loading";
+
 
 
 const registerTab = createMaterialTopTabNavigator(
@@ -37,8 +41,8 @@ const registerTab = createMaterialTopTabNavigator(
 
 const authStack = createStackNavigator(
     {
-        registerTab,
         Login,
+        Register: registerTab,
     },
     {
         headerMode: 'none',
@@ -52,6 +56,31 @@ const appTab = createBottomTabNavigator(
         Chat
     },
     {
+        defaultNavigationOptions: ({ navigation }) => ({
+            tabBarIcon: ({ tintColor }) => {
+              
+                const { routeName } = navigation.state
+
+                let iconName = undefined
+                let IconComponent = undefined
+        
+                switch(routeName) {
+                    case 'Explore':
+                      iconName = 'explore'
+                      IconComponent = MaterialIcons
+                      break
+                    case 'Home':
+                      iconName = 'home'
+                      IconComponent = Entypo
+                      break
+                    case 'Chat':
+                      iconName = 'chat'
+                      IconComponent = Entypo
+                      break
+                  }
+                return (<IconComponent name={iconName} size={25} color={tintColor} />);
+            },
+        }),
         initialRouteName: "Home",
         tabBarOptions: {
             activeTintColor: '#2B93B6',
@@ -63,11 +92,12 @@ const appTab = createBottomTabNavigator(
 const Routes = createAppContainer(
     createSwitchNavigator(
         {    
+            Loading,
             Auth: authStack,
             App: appTab,
         },
         {
-            initialRouteName: "Auth"
+            initialRouteName: "Loading"
         }
     )
 );

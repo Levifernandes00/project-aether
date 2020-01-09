@@ -12,6 +12,10 @@ function Join({ appear, time, navigation }) {
 
     const {height} = Dimensions.get('window');
 
+
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
     useEffect(()=>{
         if(appear){
             Animated.timing(heightAnim, {
@@ -36,7 +40,10 @@ function Join({ appear, time, navigation }) {
     }, [appear]);
 
     function handleSignIn() {
-        
+        firebase
+            .auth()
+            .signInWithEmailAndPassword(email, password)
+            .catch(error => alert(error.message))
     };
 
   return (
@@ -56,15 +63,18 @@ function Join({ appear, time, navigation }) {
                 placeholderTextColor="#999"
                 autoCapitalize='none'
                 autoCorrect={false}
+                onChangeText={text => setEmail(text)}
 
              />
             <Text style={styles.inputName}>Password</Text>
             <TextInput 
                 style={styles.input}
+                secureTextEntry
                 placeholder="Type here your password"
                 placeholderTextColor="#999"
                 autoCapitalize='none'
                 autoCorrect={false}    
+                onChangeText={text => setPassword(text)}
             />
 
         </KeyboardAvoidingView>
@@ -75,7 +85,7 @@ function Join({ appear, time, navigation }) {
 
         <TouchableOpacity 
             style={styles.singUpButton} 
-            onPress={()=> navigation.navigate("RegisterProfile")} 
+            onPress={()=> {navigation.navigate("Register")}} 
         >
             <Text style={styles.subtext}>Don't have account yet? <Text style={styles.signin}>Sing Up</Text></Text>
         </TouchableOpacity>
@@ -157,4 +167,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default withNavigation(Join);
+export default Join;
