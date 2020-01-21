@@ -2,7 +2,7 @@ import React from 'react';
 import { createAppContainer, createSwitchNavigator} from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 import { createBottomTabNavigator, createMaterialTopTabNavigator } from "react-navigation-tabs";
-import { MaterialIcons, Entypo } from '@expo/vector-icons';
+import { MaterialIcons, Entypo, Feather } from '@expo/vector-icons';
 
 
 import Home from "./pages/Home";
@@ -10,8 +10,9 @@ import Login from "./pages/Login";
 import RegisterProfile from "./pages/RegisterProfile";
 import RegisterStartup from "./pages/RegisterStartup";
 import Explore from "./pages/Explore";
-import Chat from "./pages/Chat";
+import Profile from "./pages/Profile";
 import Loading from "./pages/Loading";
+import Startup from "./pages/Startup";
 
 
 
@@ -49,11 +50,21 @@ const authStack = createStackNavigator(
     }
 );
 
+const profileManagementStack = createStackNavigator(
+    {
+        Profile,
+        Startup,
+    },
+    {
+        headerMode: 'none',
+    }
+)
+
 const appTab = createBottomTabNavigator(
     {
         Explore,
         Home,
-        Chat
+        Profile: profileManagementStack
     },
     {
         defaultNavigationOptions: ({ navigation }) => ({
@@ -73,9 +84,9 @@ const appTab = createBottomTabNavigator(
                       iconName = 'home'
                       IconComponent = Entypo
                       break
-                    case 'Chat':
-                      iconName = 'chat'
-                      IconComponent = Entypo
+                    case 'Profile':
+                      iconName = 'user'
+                      IconComponent = Feather
                       break
                   }
                 return (<IconComponent name={iconName} size={25} color={tintColor} />);

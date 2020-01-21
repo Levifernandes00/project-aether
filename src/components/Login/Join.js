@@ -80,7 +80,7 @@ function Join({ appear, time, navigation }) {
         </KeyboardAvoidingView>
 
         <TouchableOpacity style={styles.button} onPress={handleSignIn}>
-                <Text style={styles.buttonText}>Log in</Text>
+            <Text style={styles.buttonText}>Log in</Text>
         </TouchableOpacity>
 
         <TouchableOpacity 
