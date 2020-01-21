@@ -13,13 +13,17 @@ export default class Home extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.imageContainer}>
+        <TouchableOpacity>
           <Image style={styles.image} source={{ uri: `${this.props.imageURI}` }} />
+        </TouchableOpacity>
         </View>
         <View style={styles.description}>
-          <Text style={styles.name}>{this.props.name}</Text>
-          <Text numberOfLines={3} style={styles.vagas}>
-            {this.props.vagas}
-          </Text>
+          <TouchableOpacity>
+            <Text style={styles.name}>{this.props.name}</Text>
+            <Text numberOfLines={3} style={styles.vagas}>
+              {this.props.vagas}
+            </Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.apply}>
           <TouchableOpacity onPress={()=> this.handleApply()} style={styles.applyButton}>

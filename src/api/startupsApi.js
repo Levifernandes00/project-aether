@@ -5,7 +5,7 @@ export function addStartup() {
 
 }
 
-export async function getStartups(startupsReceived) {
+export async function getStartups() {
     var startupList = []
 
     const snapshot = await firebase
@@ -26,6 +26,6 @@ export async function getStartups(startupsReceived) {
         });
     });
 
-    startupsReceived(startupList);
+    return startupList
     
 }
