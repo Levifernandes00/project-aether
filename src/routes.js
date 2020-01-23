@@ -19,7 +19,6 @@ import Startup from "./pages/Startup";
 const registerTab = createMaterialTopTabNavigator(
     {
         Profile: RegisterProfile,
-        Startup: RegisterStartup
     },
     {
         tabBarOptions: {

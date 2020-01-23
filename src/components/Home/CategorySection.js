@@ -14,8 +14,8 @@ export default class Home extends Component {
           disableScrollViewPanResponder={true}
           
         >
-            <CategoryCard title="Edtech" imageURI='https://cdn-cv.r4you.co/wp-content/uploads/2018/10/iStock-536613027.jpg' />
-            <CategoryCard title="Edtech" imageURI='https://cdn-cv.r4you.co/wp-content/uploads/2018/10/iStock-536613027.jpg' />
+            <CategoryCard title="Edutech" imageURI='https://images.unsplash.com/photo-1503676260728-1c00da094a0b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=709&q=80' />
+            <CategoryCard title="ConstruTech" imageURI='https://images.unsplash.com/photo-1485083269755-a7b559a4fe5e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80' />
         </ScrollView>
     
     );

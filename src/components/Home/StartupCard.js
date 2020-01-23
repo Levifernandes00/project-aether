@@ -1,19 +1,28 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Text, Image, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Text, Image, TouchableOpacity, Modal } from 'react-native';
 
+import StartupDescripion from '../StartupDescription';
 // import { Container } from './styles';
 
 export default class Home extends Component {
+  state = {
+    modalVisible: false
+  }
 
   handleApply() {
 
+  }
+
+  handleStartupDescription = () => {
+    this.setState({ modalVisible: true });
+    setTimeout(()=> this.setState({ modalVisible: false }), 400);
   }
 
   render() {
     return (
       <View style={styles.container}>
         <View style={styles.imageContainer}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => this.handleStartupDescription()}>
           <Image style={styles.image} source={{ uri: `${this.props.imageURI}` }} />
         </TouchableOpacity>
         </View>
@@ -30,6 +39,8 @@ export default class Home extends Component {
             <Text style={styles.buttonText}>Apply</Text>
           </TouchableOpacity>
         </View>
+
+        <StartupDescripion visible={this.state.modalVisible} />
       </View>
     );
   }

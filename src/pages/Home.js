@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, StatusBar } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import * as firebase from 'firebase';
 
@@ -16,9 +16,9 @@ export default class Register extends Component {
   }
 
   componentDidMount() {
+    StatusBar.setHidden(true);
     const { email, displayName, uid } = firebase.auth().currentUser
     this.setState({ email, displayName, uid })
-    
   }
 
 

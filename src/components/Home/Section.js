@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 
 import StartupCard from './StartupCard';
-import { getStartups } from '../../api/startupsApi';
+import { getStartupsBy } from '../../api/startupsApi';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default class Section extends Component {
@@ -16,7 +16,7 @@ export default class Section extends Component {
   }
 
   setStartupList = async () => {
-    const startupList = await getStartups();
+    const startupList = await getStartupsBy(null);
     this.setState({ startupList });
   }
 
@@ -24,7 +24,7 @@ export default class Section extends Component {
 
     return (
       <View style={styles.container}>
-        {this.state.startupList 
+      {this.state.startupList 
          
         ? this.state.startupList.map((startup, index) => {
           return (
@@ -38,7 +38,7 @@ export default class Section extends Component {
         })
 
         : (<Text style={styles.empty}>Opa ...</Text>)
-     } 
+      } 
 
       </View>
     );

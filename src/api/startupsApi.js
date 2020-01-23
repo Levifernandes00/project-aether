@@ -5,14 +5,36 @@ export function addStartup() {
 
 }
 
-export async function getStartups() {
+export async function getStartupsBy(object) {
     var startupList = []
+    var snapshot;
 
-    const snapshot = await firebase
-    .firestore()
-    .collection("Startup")
-    .get();
+    console.log(object);
+    if(object){
+        if(object.uid) {
+            console.log(object.uid)
+            snapshot = await firebase
+            .firestore()
+            .collection("Startup")
+            .where("responsaveis", "array-contains", object.uid)
+            .get();
+        }
+        else if(object.category) {
+            snapshot = await firebase
+            .firestore()
+            .collection("Startup")
+            .where("categorias", "array-contains", object.category)
+            .get();
+        }
+    }
 
+    else {
+        snapshot = await firebase
+        .firestore()
+        .collection("Startup")
+        .get();
+    }    
+    
     snapshot.forEach( doc => {
 
         startupList.push({

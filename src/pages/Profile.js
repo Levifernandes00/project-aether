@@ -1,10 +1,9 @@
 import React, { Component, useState } from 'react';
-import { View, Text, StyleSheet, Image, Modal, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, Modal, TouchableOpacity, StatusBar } from 'react-native';
 import { Ionicons, Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 
-
-import Fire from '../../Fire';
 import * as firebase from 'firebase';
+import { getStartupsBy } from '../api/startupsApi';
 
 export default class Profile extends Component {
 
@@ -16,16 +15,25 @@ export default class Profile extends Component {
     phone: "",
     
     modalVisible: false,
+    startupList: [],
   }
 
 
   componentDidMount() {
+    StatusBar.setHidden(true);
     const { uid, displayName, email, phoneNumber } = firebase.auth().currentUser;
     this.setState({ uid, email, name: displayName, phone: phoneNumber });
   }
 
   signOutUser = () => {
-    firebase.auth().signOut;
+    firebase.auth().signOut();
+    this.props.navigation.navigate("Loading");
+    console.log("Something")
+  }
+
+  setStartupList = async () => {
+    const startupList = await getStartupsBy(this.state);
+    this.setState({ startupList });
   }
 
 
@@ -33,7 +41,7 @@ export default class Profile extends Component {
     return (
         <View style={styles.container}>            
             <View style={styles.logout}>
-              <TouchableOpacity onPress={this.signOutUser}>
+              <TouchableOpacity onPress={() => this.signOutUser()}>
                 <MaterialCommunityIcons name="logout" size={20} color="#403BEB" />
               </TouchableOpacity>
             </View>
@@ -83,7 +91,7 @@ export default class Profile extends Component {
 
             <TouchableOpacity  
               style={styles.button}
-              onPress={()=>{ this.setState({ modalVisible: true }) }}
+              onPress={()=>{ this.setState({ modalVisible: true }); this.setStartupList() }}
             >
               <Text style={styles.buttonText}>Gerenciar Startups</Text>
             </TouchableOpacity>
@@ -99,18 +107,30 @@ export default class Profile extends Component {
                 <Ionicons name="md-close" size={30} color="#999"/>
               </TouchableOpacity>
 
-              <TouchableOpacity 
-                onPress={() => {
-                  this.props.navigation.navigate('Startup')
-                  this.setState({ modalVisible: false })
-                }}
-              >
-                <View style={styles.startupContainer}>
-                  <Image source={{ uri: 'https://computerworld.com.br/wp-content/uploads/2019/11/A-partir-de-dezembro-QuintoAndar-vai-intermediar-compra-e-venda-de-im%C3%B3veis.jpg' }} style={styles.startupImage}/>
-                  <Text style={styles.startupName}>Airbnb</Text>
-                </View>
-              </TouchableOpacity>
 
+              {this.state.startupList 
+         
+                ? this.state.startupList.map((startup, index) => {
+                  return (
+                    <TouchableOpacity 
+                      onPress={() => {
+                        this.props.navigation.navigate('Startup', { startup });
+                        this.setState({ modalVisible: false });
+                        console.log(startup)
+                      }}
+                    >
+                      <View style={styles.startupContainer}>
+                        <Image source={{ uri: `${startup.imageURL}` }} style={styles.startupImage}/>
+                        <Text style={styles.startupName}>{startup.nome}</Text>
+                      </View>
+                    </TouchableOpacity>
+
+                  );
+                })
+
+                : (<Text style={styles.empty}>Opa ...</Text>)
+              } 
+              
               
             </Modal>
             

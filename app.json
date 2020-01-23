@@ -11,7 +11,7 @@
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./src/assets/logo.png",
+    "icon": "./src/assets/logoComFundo.png",
     "splash": {
       "image": "./src/assets/splash.png",
       "resizeMode": "cover",

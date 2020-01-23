@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, View, Image, StyleSheet, Text, Animated, TouchableOpacity, KeyboardAvoidingView, Dimensions } from 'react-native';
+import { SafeAreaView, View, Image, StyleSheet, Text, Animated, TouchableOpacity, KeyboardAvoidingView, StatusBar } from 'react-native';
 
 import logomarca from '../assets/logomarca.png';
 import fundo from '../assets/fundo.png';
@@ -18,6 +18,7 @@ export default function Login({ navigation }) {
     const time = 4000;
 
 
+    useEffect(()=> { StatusBar.setHidden(true) }, []);
     
     function handleChanges(){
         Animated.timing(balaoTranslation, {

@@ -1,11 +1,12 @@
 import React from 'react'
-import { View, Text, ActivityIndicator, StyleSheet, Image } from 'react-native';
+import { View, Text, ActivityIndicator, StyleSheet, Image, StatusBar } from 'react-native';
 import logo from "../assets/logo.png";
 import * as firebase from 'firebase';
 
 export default class Loading extends React.Component {
     componentDidMount() {
-        firebase.auth().onAuthStateChanged(user => this.props.navigation.navigate(user ? 'Home' : 'Auth'))
+      StatusBar.setHidden(true);
+      firebase.auth().onAuthStateChanged(user => this.props.navigation.navigate(user ? 'Home' : 'Auth'))
     }
 
   render() {
