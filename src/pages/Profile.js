@@ -119,6 +119,7 @@ export default class Profile extends Component {
                 ? this.state.startupList.map((startup, index) => {
                   return (
                     <TouchableOpacity 
+                      key={startup.id}
                       onPress={() => {
                         this.props.navigation.navigate('Startup', { startup });
                         this.setState({ modalVisible: false });
