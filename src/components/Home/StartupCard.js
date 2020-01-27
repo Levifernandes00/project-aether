@@ -5,6 +5,13 @@ import StartupDescripion from '../StartupDescription';
 // import { Container } from './styles';
 
 export default class Home extends Component {
+  constructor() {
+    super();
+    console.ignoredYellowBox = [
+    'Setting a timer'
+    ];
+  }
+
   state = {
     modalVisible: false
   }
@@ -22,12 +29,12 @@ export default class Home extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.imageContainer}>
-        <TouchableOpacity onPress={() => this.handleStartupDescription()}>
-          <Image style={styles.image} source={{ uri: `${this.props.imageURI}` }} />
-        </TouchableOpacity>
+          <TouchableOpacity onPress={() => this.handleStartupDescription()}>
+            <Image style={styles.image} source={{ uri: `${this.props.imageURI}` }} />
+          </TouchableOpacity>
         </View>
         <View style={styles.description}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => this.handleStartupDescription()}>
             <Text style={styles.name}>{this.props.name}</Text>
             <Text numberOfLines={3} style={styles.vagas}>
               {this.props.vagas}

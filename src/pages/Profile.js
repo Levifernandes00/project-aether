@@ -6,6 +6,12 @@ import * as firebase from 'firebase';
 import { getStartupsBy } from '../api/startupsApi';
 
 export default class Profile extends Component {
+  constructor() {
+    super();
+    console.ignoredYellowBox = [
+      'Setting a timer'
+    ];
+  }
 
 
   state = {

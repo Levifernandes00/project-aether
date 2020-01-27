@@ -8,6 +8,13 @@ import CategorySection from '../components/Home/CategorySection';
 import Section from '../components/Home/Section';
 
 export default class Register extends Component {
+
+  constructor() {
+    super();
+    console.ignoredYellowBox = [
+    'Setting a timer'
+    ];
+  }
   
   state = {
     uid: "",
@@ -42,7 +49,6 @@ export default class Register extends Component {
 
 
 const styles = StyleSheet.create({
-    
   container:{
     flex: 1,
   },

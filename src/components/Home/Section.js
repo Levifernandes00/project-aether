@@ -6,6 +6,12 @@ import { getStartupsBy } from '../../api/startupsApi';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default class Section extends Component {
+  constructor() {
+    super();
+    console.ignoredYellowBox = [
+    'Setting a timer'
+    ];
+  }
 
   state = {
     startupList: [],
