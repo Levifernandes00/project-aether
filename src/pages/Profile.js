@@ -1,9 +1,11 @@
 import React, { Component, useState } from 'react';
 import { View, Text, StyleSheet, Image, Modal, TouchableOpacity, StatusBar } from 'react-native';
 import { Ionicons, Feather, MaterialCommunityIcons } from '@expo/vector-icons';
+import * as DocumentPicker from "expo-document-picker";
 
 import * as firebase from 'firebase';
 import { getStartupsBy } from '../api/startupsApi';
+import { uriToBlob, uploadToFirebase, linkResume } from '../api/profileApi';
 
 export default class Profile extends Component {
   constructor() {
@@ -28,7 +30,7 @@ export default class Profile extends Component {
   componentDidMount() {
     StatusBar.setHidden(true);
     const { uid, displayName, email, phoneNumber } = firebase.auth().currentUser;
-    this.setState({ uid, email, name: displayName, phone: phoneNumber });
+    this.setState({ uid, email, name: displayName, phone: phoneNumber,});
   }
 
   signOutUser = () => {
@@ -42,6 +44,31 @@ export default class Profile extends Component {
     this.setState({ startupList });
   }
 
+  handleResumePress = () => {
+    DocumentPicker.getDocumentAsync({})
+    .then(result => {
+
+      if( result.type !== 'cancel'){
+        const { uri } = result;
+        return uriToBlob(uri);
+      }
+        
+    })
+    .then(blob => {
+      return uploadToFirebase(blob, "resume", this.state.uid);
+    })
+    .then(snapshot => {
+      linkResume(this.state.uid, snapshot.metadata.fullPath)
+      console.log(snapshot)
+    })
+    .catch(error => {
+      throw error;
+    });
+  }
+
+  handleAddNewStartup() {
+
+  }
 
   render() {
     return (
@@ -89,7 +116,7 @@ export default class Profile extends Component {
               <Text style={styles.title}>Resume</Text>
               <View style={{ flexDirection: 'row' }}>
                 <Text style={styles.text}>resume.pdf</Text> 
-                <TouchableOpacity style={{ marginLeft: 30, }}>
+                <TouchableOpacity onPress={() => this.handleResumePress()} style={{ marginLeft: 30, }}>
                   <Feather name="upload" size={20} color="#2B93B6"/>
                 </TouchableOpacity>
               </View>
@@ -115,7 +142,7 @@ export default class Profile extends Component {
 
 
               {this.state.startupList 
-         
+          
                 ? this.state.startupList.map((startup, index) => {
                   return (
                     <TouchableOpacity 
@@ -123,7 +150,6 @@ export default class Profile extends Component {
                       onPress={() => {
                         this.props.navigation.navigate('Startup', { startup });
                         this.setState({ modalVisible: false });
-                        console.log(startup)
                       }}
                     >
                       <View style={styles.startupContainer}>
@@ -136,8 +162,14 @@ export default class Profile extends Component {
                 })
 
                 : (<Text style={styles.empty}>Opa ...</Text>)
-              } 
-              
+             } 
+             
+              <TouchableOpacity 
+                onPress={() => this.handleAddNewStartup()}
+                style={{ width: 100, height: 20, backgroundColor: '#2B93B6', justifyContent: 'center', alignItems: 'center', marginLeft: 20 }}
+              >
+                <Ionicons name="ios-add" color="#FFFF" size={20} />
+              </TouchableOpacity>
               
             </Modal>
             

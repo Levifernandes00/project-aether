@@ -7,27 +7,38 @@ import SearchBar from '../components/Home/SearchBar';
 import CategorySection from '../components/Home/CategorySection';
 import Section from '../components/Home/Section';
 
+import { addUser } from "../api/profileApi";
+
 export default class Register extends Component {
 
   constructor() {
     super();
     console.ignoredYellowBox = [
-    'Setting a timer'
+    'Setting'
     ];
   }
   
   state = {
+    user: {},
     uid: "",
     email: "",
     displayName: "",
   }
 
-  componentDidMount() {
+  componentWillMount() {
     StatusBar.setHidden(true);
-    const { email, displayName, uid } = firebase.auth().currentUser
-    this.setState({ email, displayName, uid })
+    const user = firebase.auth().currentUser
+    const { email, displayName, uid } = user    
+    this.setState({ email, displayName, uid, user })
+  }
+  
+  componentDidMount() {
+    this.setUser();
   }
 
+  setUser() {
+    addUser(this.state.uid);
+  }
 
 
   render() {
@@ -40,7 +51,7 @@ export default class Register extends Component {
           <CategorySection />
 
           <Text style={styles.title}>Startups available</Text>
-          <Section />
+          <Section user={this.state.user} />
         </ScrollView>
       </View>
     );

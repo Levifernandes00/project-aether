@@ -1,23 +1,43 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Text, Image, TouchableOpacity, Modal } from 'react-native';
 
+
 import StartupDescripion from '../StartupDescription';
-// import { Container } from './styles';
+import { addApply, getUsers } from "../../api/startupsApi";
+import { getResume } from "../../api/profileApi";
 
 export default class Home extends Component {
+  state = {
+    modalVisible: false,
+    startup: {},
+  }
+
   constructor() {
     super();
     console.ignoredYellowBox = [
     'Setting a timer'
     ];
   }
-
-  state = {
-    modalVisible: false
+  
+  componentDidMount() {
+    this.setState({ startup: this.props.startup })
   }
 
-  handleApply() {
 
+  async handleApply() {
+    const { uid, displayName, email, phoneNumber } = this.props.user;    
+    const userObject = {
+      displayName,
+      phoneNumber,
+      uid,
+      email
+    }
+    const resume = await getResume(uid);
+
+    userObject.resume = resume;
+
+
+    addApply(userObject, this.state.startup.id);
   }
 
   handleStartupDescription = () => {
@@ -26,18 +46,20 @@ export default class Home extends Component {
   }
 
   render() {
+    const { startup } = this.props
+
     return (
       <View style={styles.container}>
         <View style={styles.imageContainer}>
           <TouchableOpacity onPress={() => this.handleStartupDescription()}>
-            <Image style={styles.image} source={{ uri: `${this.props.imageURI}` }} />
+            <Image style={styles.image} source={{ uri: `${startup.imageURL}` }} />
           </TouchableOpacity>
         </View>
         <View style={styles.description}>
-          <TouchableOpacity onPress={() => this.handleStartupDescription()}>
-            <Text style={styles.name}>{this.props.name}</Text>
+          <TouchableOpacity onPress={() => console.log(startup)}>
+            <Text style={styles.name}>{startup.nome}</Text>
             <Text numberOfLines={3} style={styles.vagas}>
-              {this.props.vagas}
+              {startup.vagas.join('\n')}
             </Text>
           </TouchableOpacity>
         </View>

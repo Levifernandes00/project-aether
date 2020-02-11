@@ -2,18 +2,18 @@ import React, { Component } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 
 import StartupCard from './StartupCard';
-import { getStartupsBy } from '../../api/startupsApi';
+import { getStartupsBy, getUsers, getStartupNotFrom } from '../../api/startupsApi';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+
+console.disableYellowBox = true;
 
 export default class Section extends Component {
   constructor() {
     super();
-    console.ignoredYellowBox = [
-    'Setting a timer'
-    ];
   }
 
   state = {
+    uid: "",
     startupList: [],
   }
 
@@ -21,14 +21,20 @@ export default class Section extends Component {
     this.setStartupList();
   }
 
+  componentDidUpdate(){
+    this.setStartupList();
+  }
+
   setStartupList = async () => {
-    const startupList = await getStartupsBy(null);
+    const startupList = await getStartupNotFrom(this.props.user);
     this.setState({ startupList });
   }
 
   render() {
+    const { user } = this.props;
 
     return (
+
       <View style={styles.container}>
       {this.state.startupList 
          
@@ -36,9 +42,8 @@ export default class Section extends Component {
           return (
             <StartupCard
               key={startup.id} 
-              imageURI={startup.imageURL} 
-              name={startup.nome}
-              vagas={startup.vagas.join('\n')}  
+              startup={ startup }  
+              user = { user }
             />
           );
         })
