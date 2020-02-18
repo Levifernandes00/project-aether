@@ -1,6 +1,6 @@
 import React, { Component, useEffect } from 'react';
 
-import { View, Text, StyleSheet, TextInput, KeyboardAvoidingView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TextInput, KeyboardAvoidingView, TouchableOpacity, AsyncStorage } from 'react-native';
 import { AntDesign, Feather } from "@expo/vector-icons";
 import * as firebase from 'firebase';
 
@@ -18,10 +18,18 @@ export default class RegisterProfile extends Component {
     firebase
       .auth()
       .createUserWithEmailAndPassword(this.state.email, this.state.password)
-      .then( userCredentials => userCredentials.user.updateProfile({
-        displayName: this.state.name
-       })
-      )
+      .then( userCredentials => {
+        userCredentials.user.updateProfile({
+          displayName: this.state.name
+        });
+        const response = api.post('/user', { 
+          name: this.state.name, 
+          email: this.state.email, 
+        }).then(async data => {
+          await AsyncStorage.setItem("user", data._id);
+        }); 
+      
+      })
       .catch(error => alert(error.message));
   }
   

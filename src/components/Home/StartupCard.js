@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Text, Image, TouchableOpacity, Modal } from 'react-native';
+import { View, StyleSheet, Text, Image, TouchableOpacity, Modal, AsyncStorage } from 'react-native';
 
 
 import StartupDescripion from '../StartupDescription';
-import { addApply, getUsers } from "../../api/startupsApi";
-import { getResume } from "../../api/profileApi";
+import api from './../../services/api';
 
 export default class Home extends Component {
   state = {
@@ -25,19 +24,14 @@ export default class Home extends Component {
 
 
   async handleApply() {
-    const { uid, displayName, email, phoneNumber } = this.props.user;    
-    const userObject = {
-      displayName,
-      phoneNumber,
-      uid,
-      email
-    }
-    const resume = await getResume(uid);
+    const userid = await AsyncStorage.getItem("user");
 
-    userObject.resume = resume;
-
-
-    addApply(userObject, this.state.startup.id);
+    const response = api.post(`/startup/${this.state.startup._id}/apply`, 
+      null,
+      {
+        headers: { userid }
+      }
+    )
   }
 
   handleStartupDescription = () => {
@@ -57,9 +51,9 @@ export default class Home extends Component {
         </View>
         <View style={styles.description}>
           <TouchableOpacity onPress={() => console.log(startup)}>
-            <Text style={styles.name}>{startup.nome}</Text>
+            <Text style={styles.name}>{startup.name}</Text>
             <Text numberOfLines={3} style={styles.vagas}>
-              {startup.vagas.join('\n')}
+              {startup.jobs.join('\n')}
             </Text>
           </TouchableOpacity>
         </View>

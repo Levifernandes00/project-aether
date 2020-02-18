@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, Animated, StyleSheet, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Dimensions } from 'react-native';
+import { View, Animated, StyleSheet, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Dimensions, AsyncStorage } from 'react-native';
 import { withNavigation } from "react-navigation";
 import { FontAwesome } from '@expo/vector-icons';
 import * as firebase from 'firebase';
 
-// import { Container } from './styles';
+import api from './../../services/api';
 
 function Join({ appear, time, navigation }) {
     const [fadeAnim] = useState(new Animated.Value(0));
@@ -39,11 +39,21 @@ function Join({ appear, time, navigation }) {
 
     }, [appear]);
 
-    function handleSignIn() {
+    async function handleSignIn() {
+        const userExists = await api.get('/userEmail',{
+            headers: { email },
+        })
+
+        console.log(userExists.data)
+        const { _id } = userExists.data;
+
+        await AsyncStorage.setItem("user", _id);
+
+
         firebase
             .auth()
             .signInWithEmailAndPassword(email, password)
-            .catch(error => alert(error.message))
+            .catch(error => alert(error.message));
     };
 
   return (

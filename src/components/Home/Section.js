@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, AsyncStorage } from 'react-native';
 
 import StartupCard from './StartupCard';
-import { getStartupsBy, getUsers, getStartupNotFrom } from '../../api/startupsApi';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-
-console.disableYellowBox = true;
+import api from './../../services/api';
 
 export default class Section extends Component {
   constructor() {
@@ -15,24 +12,33 @@ export default class Section extends Component {
   state = {
     uid: "",
     startupList: [],
+    user: {},
   }
 
-  componentDidMount() {
+  componentDidMount(){
     this.setStartupList();
   }
-
-  componentDidUpdate(){
-    this.setStartupList();
+  
+  componentDidUpdate(prevProps, prevState) {
+    if(prevState.startupList !== this.state.startupList){
+      this.setStartupList();
+    }
   }
 
-  setStartupList = async () => {
-    const startupList = await getStartupNotFrom(this.props.user);
-    this.setState({ startupList });
+
+  async setStartupList() {
+    const uid = await AsyncStorage.getItem("user");
+    console.log(uid);
+
+    const response = await api.get('/startups', {
+      headers: {userid: uid},
+    });
+
+    this.setState({ startupList: response.data })
   }
 
   render() {
-    const { user } = this.props;
-
+    
     return (
 
       <View style={styles.container}>
@@ -41,9 +47,8 @@ export default class Section extends Component {
         ? this.state.startupList.map((startup, index) => {
           return (
             <StartupCard
-              key={startup.id} 
+              key={startup._id} 
               startup={ startup }  
-              user = { user }
             />
           );
         })

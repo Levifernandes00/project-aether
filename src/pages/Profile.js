@@ -1,11 +1,11 @@
 import React, { Component, useState } from 'react';
-import { View, Text, StyleSheet, Image, Modal, TouchableOpacity, StatusBar } from 'react-native';
+import { View, Text, StyleSheet, Image, Modal, TouchableOpacity, StatusBar, AsyncStorage } from 'react-native';
 import { Ionicons, Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import * as DocumentPicker from "expo-document-picker";
 
 import * as firebase from 'firebase';
-import { getStartupsBy } from '../api/startupsApi';
 import { uriToBlob, uploadToFirebase, linkResume } from '../api/profileApi';
+import api from './../services/api';
 
 export default class Profile extends Component {
   constructor() {
@@ -33,15 +33,20 @@ export default class Profile extends Component {
     this.setState({ uid, email, name: displayName, phone: phoneNumber,});
   }
 
-  signOutUser = () => {
+  async signOutUser() {
     firebase.auth().signOut();
+    await AsyncStorage.clear();
     this.props.navigation.navigate("Loading");
-    console.log("Something")
   }
 
   setStartupList = async () => {
-    const startupList = await getStartupsBy(this.state);
-    this.setState({ startupList });
+    const uid = await AsyncStorage.getItem("user");
+
+    const response = await api.get('/startupManaged', {
+      headers: {userid: uid},
+    });
+
+    this.setState({ startupList: response.data });
   }
 
   handleResumePress = () => {
@@ -146,7 +151,7 @@ export default class Profile extends Component {
                 ? this.state.startupList.map((startup, index) => {
                   return (
                     <TouchableOpacity 
-                      key={startup.id}
+                      key={startup._id}
                       onPress={() => {
                         this.props.navigation.navigate('Startup', { startup });
                         this.setState({ modalVisible: false });
@@ -154,7 +159,7 @@ export default class Profile extends Component {
                     >
                       <View style={styles.startupContainer}>
                         <Image source={{ uri: `${startup.imageURL}` }} style={styles.startupImage}/>
-                        <Text style={styles.startupName}>{startup.nome}</Text>
+                        <Text style={styles.startupName}>{startup.name}</Text>
                       </View>
                     </TouchableOpacity>
 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, StatusBar } from 'react-native';
+import { View, Text, StyleSheet, StatusBar, AsyncStorage } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import * as firebase from 'firebase';
 
@@ -7,40 +7,26 @@ import SearchBar from '../components/Home/SearchBar';
 import CategorySection from '../components/Home/CategorySection';
 import Section from '../components/Home/Section';
 
-import { addUser } from "../api/profileApi";
+import api from './../services/api';
 
 export default class Register extends Component {
 
-  constructor() {
-    super();
-    console.ignoredYellowBox = [
-    'Setting'
-    ];
-  }
-  
   state = {
-    user: {},
+    
     uid: "",
-    email: "",
     displayName: "",
   }
 
-  componentWillMount() {
+  componentDidMount() {
     StatusBar.setHidden(true);
-    const user = firebase.auth().currentUser
-    const { email, displayName, uid } = user    
-    this.setState({ email, displayName, uid, user })
+    const user = firebase.auth().currentUser;
+    this.console();
   }
   
-  componentDidMount() {
-    this.setUser();
+  async console() {
+    console.log(await AsyncStorage.getItem("user"));
   }
-
-  setUser() {
-    addUser(this.state.uid);
-  }
-
-
+ 
   render() {
     return (
       <View style={styles.container}>
@@ -51,7 +37,7 @@ export default class Register extends Component {
           <CategorySection />
 
           <Text style={styles.title}>Startups available</Text>
-          <Section user={this.state.user} />
+          <Section />
         </ScrollView>
       </View>
     );
