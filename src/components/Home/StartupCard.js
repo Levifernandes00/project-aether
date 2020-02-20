@@ -19,7 +19,7 @@ export default class Home extends Component {
   }
   
   componentDidMount() {
-    this.setState({ startup: this.props.startup })
+    this.setState({ startup: this.props.startup });
   }
 
 
@@ -50,7 +50,7 @@ export default class Home extends Component {
           </TouchableOpacity>
         </View>
         <View style={styles.description}>
-          <TouchableOpacity onPress={() => console.log(startup)}>
+          <TouchableOpacity onPress={() => this.handleStartupDescription()}>
             <Text style={styles.name}>{startup.name}</Text>
             <Text numberOfLines={3} style={styles.vagas}>
               {startup.jobs.join('\n')}
@@ -63,7 +63,7 @@ export default class Home extends Component {
           </TouchableOpacity>
         </View>
 
-        <StartupDescripion visible={this.state.modalVisible} />
+        <StartupDescripion startup={startup}  visible={this.state.modalVisible} />
       </View>
     );
   }

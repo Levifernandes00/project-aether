@@ -5,6 +5,8 @@ import StartupCard from './StartupCard';
 import api from './../../services/api';
 
 export default class Section extends Component {
+  _isMounted = false;
+  
   constructor() {
     super();
   }
@@ -17,19 +19,23 @@ export default class Section extends Component {
 
   componentDidMount(){
     this.setStartupList();
+    this._isMounted = true;
   }
   
   componentDidUpdate(prevProps, prevState) {
-    if(prevState.startupList !== this.state.startupList){
+    if(prevState.startupList !== this.state.startupList && this._isMounted){
       this.setStartupList();
     }
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
 
   async setStartupList() {
     const uid = await AsyncStorage.getItem("user");
-    console.log(uid);
-
+    
     const response = await api.get('/startups', {
       headers: {userid: uid},
     });
@@ -42,7 +48,7 @@ export default class Section extends Component {
     return (
 
       <View style={styles.container}>
-      {this.state.startupList 
+      {this.state.startupList && this.state.startupList.length !== 0 
          
         ? this.state.startupList.map((startup, index) => {
           return (

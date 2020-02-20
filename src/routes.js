@@ -9,7 +9,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import RegisterProfile from "./pages/RegisterProfile";
 import RegisterStartup from "./pages/RegisterStartup";
-import Explore from "./pages/Explore";
+import Manager from "./pages/Manager";
 import Profile from "./pages/Profile";
 import Loading from "./pages/Loading";
 import Startup from "./pages/Startup";
@@ -49,10 +49,11 @@ const authStack = createStackNavigator(
     }
 );
 
-const profileManagementStack = createStackNavigator(
+const managerStack = createStackNavigator(
     {
-        Profile,
+        Manager,
         Startup,
+        RegisterStartup,
     },
     {
         headerMode: 'none',
@@ -61,9 +62,9 @@ const profileManagementStack = createStackNavigator(
 
 const appTab = createBottomTabNavigator(
     {
-        Explore,
+        Manager: managerStack,
         Home,
-        Profile: profileManagementStack
+        Profile,
     },
     {
         defaultNavigationOptions: ({ navigation }) => ({
@@ -75,8 +76,8 @@ const appTab = createBottomTabNavigator(
                 let IconComponent = undefined
         
                 switch(routeName) {
-                    case 'Explore':
-                      iconName = 'explore'
+                    case 'Manager':
+                      iconName = 'people-outline'
                       IconComponent = MaterialIcons
                       break
                     case 'Home':

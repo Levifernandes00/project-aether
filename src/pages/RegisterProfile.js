@@ -3,6 +3,7 @@ import React, { Component, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, KeyboardAvoidingView, TouchableOpacity, AsyncStorage } from 'react-native';
 import { AntDesign, Feather } from "@expo/vector-icons";
 import * as firebase from 'firebase';
+import api from './../services/api';
 
 
 export default class RegisterProfile extends Component {

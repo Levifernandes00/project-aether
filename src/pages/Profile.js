@@ -23,7 +23,6 @@ export default class Profile extends Component {
     phone: "",
     
     modalVisible: false,
-    startupList: [],
   }
 
 
@@ -39,15 +38,7 @@ export default class Profile extends Component {
     this.props.navigation.navigate("Loading");
   }
 
-  setStartupList = async () => {
-    const uid = await AsyncStorage.getItem("user");
-
-    const response = await api.get('/startupManaged', {
-      headers: {userid: uid},
-    });
-
-    this.setState({ startupList: response.data });
-  }
+ 
 
   handleResumePress = () => {
     DocumentPicker.getDocumentAsync({})
@@ -71,9 +62,6 @@ export default class Profile extends Component {
     });
   }
 
-  handleAddNewStartup() {
-
-  }
 
   render() {
     return (
@@ -126,57 +114,6 @@ export default class Profile extends Component {
                 </TouchableOpacity>
               </View>
             </View>
-
-            <TouchableOpacity  
-              style={styles.button}
-              onPress={()=>{ this.setState({ modalVisible: true }); this.setStartupList() }}
-            >
-              <Text style={styles.buttonText}>Gerenciar Startups</Text>
-            </TouchableOpacity>
-
-            <Modal
-              animationType="slide"
-              transparent={false}
-              visible={this.state.modalVisible}
-            >
-              <TouchableOpacity 
-                onPress={()=>{ this.setState({ modalVisible: false }) }}
-                style={{ alignSelf: 'stretch', alignItems: 'flex-end', margin: 20 }}>
-                <Ionicons name="md-close" size={30} color="#999"/>
-              </TouchableOpacity>
-
-
-              {this.state.startupList 
-          
-                ? this.state.startupList.map((startup, index) => {
-                  return (
-                    <TouchableOpacity 
-                      key={startup._id}
-                      onPress={() => {
-                        this.props.navigation.navigate('Startup', { startup });
-                        this.setState({ modalVisible: false });
-                      }}
-                    >
-                      <View style={styles.startupContainer}>
-                        <Image source={{ uri: `${startup.imageURL}` }} style={styles.startupImage}/>
-                        <Text style={styles.startupName}>{startup.name}</Text>
-                      </View>
-                    </TouchableOpacity>
-
-                  );
-                })
-
-                : (<Text style={styles.empty}>Opa ...</Text>)
-             } 
-             
-              <TouchableOpacity 
-                onPress={() => this.handleAddNewStartup()}
-                style={{ width: 100, height: 20, backgroundColor: '#2B93B6', justifyContent: 'center', alignItems: 'center', marginLeft: 20 }}
-              >
-                <Ionicons name="ios-add" color="#FFFF" size={20} />
-              </TouchableOpacity>
-              
-            </Modal>
             
         </View>
     );
@@ -237,24 +174,5 @@ const styles = StyleSheet.create({
       color: '#FFF',
     },
 
-    startupContainer: {
-      borderColor: '#999',
-      borderWidth: StyleSheet.hairlineWidth,
-      borderRadius: 25,
-      width: '90%',
-      justifyContent: 'center',
-      alignItems: 'center',
-      paddingVertical: 10,
-      marginHorizontal: 20,
-    },
-
-    startupImage: {
-      width: 50,
-      height: 50,
-      borderRadius: 20,
-    },
-
-    startupName: {
-      fontSize: 16,
-    },
+  
 });
