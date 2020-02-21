@@ -12,6 +12,7 @@ export default class RegisterProfile extends Component {
       name: "",
       email: "",
       password: "",
+      phoneNumber: "",
   };
 
 
@@ -21,11 +22,13 @@ export default class RegisterProfile extends Component {
       .createUserWithEmailAndPassword(this.state.email, this.state.password)
       .then( userCredentials => {
         userCredentials.user.updateProfile({
-          displayName: this.state.name
+          displayName: this.state.name,
+          phoneNumber: this.state.phoneNumber,
         });
         const response = api.post('/user', { 
           name: this.state.name, 
           email: this.state.email, 
+          phoneNumber: this.state.phoneNumber,
         }).then(async data => {
           await AsyncStorage.setItem("user", data._id);
         }); 
@@ -75,6 +78,19 @@ export default class RegisterProfile extends Component {
                 autoCorrect={false}
                 onChangeText={text => this.setState({password: text})}
 
+            />
+         
+
+            <Text style={styles.inputName}>Phone Number<Text style={{ color: 'red' }}> *</Text></Text>
+            <TextInput
+                style={styles.input}
+                placeholder="+5511981374755"
+                placeholderTextColor="#999"
+                autoCapitalize='none'
+                autoCorrect={false}
+                onChangeText={text => this.setState({password: text})}
+                autoCompleteType="tel"
+                keyboardType={'phone-pad'}
             />
           </View>
 

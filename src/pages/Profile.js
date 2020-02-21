@@ -2,12 +2,18 @@ import React, { Component, useState } from 'react';
 import { View, Text, StyleSheet, Image, Modal, TouchableOpacity, StatusBar, AsyncStorage } from 'react-native';
 import { Ionicons, Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import * as DocumentPicker from "expo-document-picker";
+import * as ImagePicker from 'expo-image-picker';
+import * as Permissions from 'expo-permissions';
 
 import * as firebase from 'firebase';
 import { uriToBlob, uploadToFirebase, linkResume } from '../api/profileApi';
 import api from './../services/api';
 
+import Topic from './../components/Profile/Topic';
+
 export default class Profile extends Component {
+
+
   constructor() {
     super();
     console.ignoredYellowBox = [
@@ -21,6 +27,8 @@ export default class Profile extends Component {
     name: "",
     email: "",
     phone: "",
+    imageURL: "",
+    resume: "",
     
     modalVisible: false,
   }
@@ -28,17 +36,21 @@ export default class Profile extends Component {
 
   componentDidMount() {
     StatusBar.setHidden(true);
-    const { uid, displayName, email, phoneNumber } = firebase.auth().currentUser;
-    this.setState({ uid, email, name: displayName, phone: phoneNumber,});
+    const { displayName, email, phoneNumber } = firebase.auth().currentUser;
+    this.getUser();
+    this.setState({ email, name: displayName, phone: phoneNumber,});
   }
 
+  async getUser(){
+    const id = await AsyncStorage.getItem("user");
+    this.setState({ uid: id });
+  }
+  
   async signOutUser() {
     firebase.auth().signOut();
     await AsyncStorage.clear();
     this.props.navigation.navigate("Loading");
-  }
-
- 
+  } 
 
   handleResumePress = () => {
     DocumentPicker.getDocumentAsync({})
@@ -54,7 +66,7 @@ export default class Profile extends Component {
       return uploadToFirebase(blob, "resume", this.state.uid);
     })
     .then(snapshot => {
-      linkResume(this.state.uid, snapshot.metadata.fullPath)
+      this.setState({ resume: snapshot.metadata.fullPath });
       console.log(snapshot)
     })
     .catch(error => {
@@ -62,6 +74,22 @@ export default class Profile extends Component {
     });
   }
 
+
+  selectPicture = async () => {
+    const { granted } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    
+    if(granted) {
+      const { cancelled, uri } = await ImagePicker.launchImageLibraryAsync({
+        allowsEditing: true,
+        base64: true,
+        aspect: [1, 1],
+      });
+      if (!cancelled) {
+        this.setState({ imageURL: uri });
+       
+      }
+    }
+  };
 
   render() {
     return (
@@ -71,39 +99,19 @@ export default class Profile extends Component {
                 <MaterialCommunityIcons name="logout" size={20} color="#403BEB" />
               </TouchableOpacity>
             </View>
-            <TouchableOpacity style={styles.avatar}>
-              <Ionicons name="ios-add" size={48} color="#FFF" />
+            <TouchableOpacity onPress={() => this.selectPicture()}  style={styles.avatar}>
+              { this.state.imageURL !== ""
+              
+              ? (<Image source={{ uri: this.state.imageURL }} style={[styles.avatar]} />)
+
+              : (<Ionicons name="ios-add" size={48} color="#FFF" />)
+              }
+              
             </TouchableOpacity>
 
-            <View style={styles.topicContainer}>
-              <View style={{ flexDirection: 'row' }}>
-                <Text style={styles.title}>Name</Text>
-                <TouchableOpacity style={{ marginLeft: 30, }}>
-                  <Feather name="edit" size={15} color="#2B93B6"/>
-                </TouchableOpacity>
-              </View>
-              <Text style={styles.text}>{this.state.name}</Text>
-            </View>
-
-            <View style={styles.topicContainer}>
-              <View style={{ flexDirection: 'row' }}>
-                <Text style={styles.title}>Email</Text>
-                <TouchableOpacity style={{ marginLeft: 30, }}>
-                  <Feather name="edit" size={15} color="#2B93B6"/>
-                </TouchableOpacity>
-              </View>
-              <Text style={styles.text}>{this.state.email}</Text>
-            </View>
-
-            <View style={styles.topicContainer}>
-              <View style={{ flexDirection: 'row' }}>
-                <Text style={styles.title}>Phone</Text>
-                <TouchableOpacity style={{ marginLeft: 30, }}>
-                  <Feather name="edit" size={15} color="#2B93B6"/>
-                </TouchableOpacity>
-              </View>
-              <Text style={styles.text}>{this.state.phone}</Text>
-            </View>
+            <Topic title="Name" value={this.state.name} />            
+            <Topic title="Email" value={this.state.email} />
+            <Topic title="Phone" value={this.state.phone}/>
 
             <View style={styles.topicContainer}>
               <Text style={styles.title}>Resume</Text>
@@ -136,7 +144,6 @@ const styles = StyleSheet.create({
     },
 
     avatar: {
-      marginTop: 30,
       width: 100,
       height: 100,
       borderRadius: 50,

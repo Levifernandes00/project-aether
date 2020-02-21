@@ -16,33 +16,12 @@ import Startup from "./pages/Startup";
 
 
 
-const registerTab = createMaterialTopTabNavigator(
-    {
-        Profile: RegisterProfile,
-    },
-    {
-        tabBarOptions: {
-           
-            activeTintColor: '#403BEB',
-            inactiveTintColor: '#999',
-            tabStyle: { 
-                paddingTop: 30,
-                backgroundColor: '#F5F5F5',
-            },
-            labelStyle: { 
-                fontSize: 14,
-                
-            },
-        },
-        
-    }
-);
 
 
 const authStack = createStackNavigator(
     {
         Login,
-        Register: registerTab,
+        Register: RegisterProfile,
     },
     {
         headerMode: 'none',
@@ -52,8 +31,8 @@ const authStack = createStackNavigator(
 const managerStack = createStackNavigator(
     {
         Manager,
-        Startup,
         RegisterStartup,
+        Startup,
     },
     {
         headerMode: 'none',

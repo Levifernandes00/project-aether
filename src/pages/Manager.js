@@ -7,6 +7,8 @@ import api from './../services/api';
 
 
 export default class Register extends Component {
+  _isMounted = false;
+
   state = {
     startupList: [],
   }
@@ -15,6 +17,17 @@ export default class Register extends Component {
   componentDidMount() {
     StatusBar.setHidden(true);
     this.setStartupList();
+    this._isMounted = true;
+  }
+ 
+  componentDidUpdate(prevProps, prevState) {
+    if(prevState.startupList !== this.state.startupList && this._isMounted){
+      this.setStartupList();
+    }
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   setStartupList = async () => {
@@ -30,12 +43,6 @@ export default class Register extends Component {
   render() {
     return (
         <View style={styles.container}>
-             <TouchableOpacity 
-                onPress={()=>{ this.setState({ modalVisible: false }) }}
-                style={{ alignSelf: 'stretch', alignItems: 'flex-end', margin: 20 }}>
-                <Ionicons name="md-close" size={30} color="#999"/>
-              </TouchableOpacity>
-
 
               {this.state.startupList 
           
@@ -60,7 +67,7 @@ export default class Register extends Component {
              } 
              
               <TouchableOpacity 
-                onPress={() => this.handleAddNewStartup()}
+                onPress={() => this.props.navigation.navigate('RegisterStartup')}
                 style={styles.addButton}
               >
                 <Ionicons name="ios-add" color="#FFFF" size={20} />
@@ -72,8 +79,8 @@ export default class Register extends Component {
 
 const styles = StyleSheet.create({
     container:{
-        flex: 1,
-       
+      flex: 1,
+      paddingTop: 30,
     },
 
     startupContainer: {
