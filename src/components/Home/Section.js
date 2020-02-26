@@ -19,6 +19,7 @@ export default class Section extends Component {
 
   componentDidMount(){
     this.setStartupList();
+
     this._isMounted = true;
   }
   
@@ -39,7 +40,6 @@ export default class Section extends Component {
     const response = await api.get('/startups', {
       headers: {userid: uid},
     });
-
     this.setState({ startupList: response.data })
   }
 

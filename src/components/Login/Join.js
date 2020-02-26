@@ -45,15 +45,20 @@ function Join({ appear, time, navigation }) {
         })
 
         console.log(userExists.data)
-        const { _id } = userExists.data;
+        const { _id, error } = userExists.data;
 
-        await AsyncStorage.setItem("user", _id);
+        if(error){
+            alert(error);
+        }
+        else{
+            await AsyncStorage.setItem("user", _id);
 
 
-        firebase
-            .auth()
-            .signInWithEmailAndPassword(email, password)
-            .catch(error => alert(error.message));
+            firebase
+                .auth()
+                .signInWithEmailAndPassword(email, password)
+                .catch(error => alert(error.message));
+        }
     };
 
   return (

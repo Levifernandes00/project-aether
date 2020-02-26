@@ -20,12 +20,8 @@ export default class Register extends Component {
   componentDidMount() {
     StatusBar.setHidden(true);
     const user = firebase.auth().currentUser;
-    // this.console();
   }
   
-  async console() {
-    console.log(await AsyncStorage.getItem("user"));
-  }
  
   render() {
     return (

@@ -28,15 +28,15 @@ export default class Profile extends Component {
         const query = this.getQuery();
 
 
-        // const response = await api.post('/updateUser', {
-        //     [query]: this.state.value,
-        // },
-        // {
-        //     headers: this.state.uid,
-        //     mode: 'cors',
-        // })
+        const response = await api.post('/updateUser', {
+            [query]: this.state.value,
+        },
+        {
+            headers: this.state.uid,
+            mode: 'cors',
+        })
 
-        // console.log(response.data);
+        console.log(response.data);
     }
 
     getQuery() {

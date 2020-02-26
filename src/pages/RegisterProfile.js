@@ -16,8 +16,24 @@ export default class RegisterProfile extends Component {
   };
 
 
-  handleSingUp = () => {
-    firebase
+   handleSingUp = async() => {
+    const response = await api.post('/user', { 
+      name: this.state.name, 
+      email: this.state.email, 
+      phoneNumber: this.state.phoneNumber,
+    });
+
+    const { _id, error } = response.data;
+
+
+    if(error){
+      alert(error);
+    }
+
+    else if(_id){
+      console.log(_id);
+      
+      firebase
       .auth()
       .createUserWithEmailAndPassword(this.state.email, this.state.password)
       .then( userCredentials => {
@@ -25,16 +41,13 @@ export default class RegisterProfile extends Component {
           displayName: this.state.name,
           phoneNumber: this.state.phoneNumber,
         });
-        const response = api.post('/user', { 
-          name: this.state.name, 
-          email: this.state.email, 
-          phoneNumber: this.state.phoneNumber,
-        }).then(async data => {
-          await AsyncStorage.setItem("user", data._id);
-        }); 
-      
       })
       .catch(error => alert(error.message));
+
+      await AsyncStorage.setItem("user", _id);
+    }
+ 
+    
   }
   
   render() {

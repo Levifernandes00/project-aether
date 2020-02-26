@@ -1,22 +1,45 @@
 import React, { Component } from 'react';
 
-import { View, TouchableOpacity, StyleSheet, Image, Text, StatusBar, Animated } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Image, Text, StatusBar, Animated, TextInput } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Ionicons, Feather } from '@expo/vector-icons'
 
 import ProfileCard from "../components/Startup/ProfileCard";
 import Information from '../components/Startup/Information';
+import api from './../services/api';
+
 
 export default class Startup extends Component {
+  _isMounted = false;
+
   state = {
     visible: false,
     animation: new Animated.Value(0),
     vagas: [],
+    textInput:[],
   }
 
   componentDidMount() {
     StatusBar.setHidden(true);
-    this.setState({ vagas: this.props.navigation.state.params.startup.vagas })
+    this.setState({ vagas: this.props.navigation.state.params.startup.jobs });
+    this._isMounted = true;
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if(prevState.vagas !== this.state.vagas && this._isMounted){
+      this.save();
+    }
+  }
+
+  componentWillUnmount(){
+    this._isMounted = false;
+  }
+
+  async save() {
+    await api.post(`startup/${this.props.navigation.state.params.startup._id}/update`,
+    {
+      jobs: this.state.vagas,
+    });
   }
 
   showInformation() {
@@ -38,6 +61,10 @@ export default class Startup extends Component {
     });
 
     this.setState({ vagas: novasVagas });
+  }
+
+  addJob(key){
+
   }
 
   render() {
@@ -83,13 +110,13 @@ export default class Startup extends Component {
         <View style={styles.topicContainer}>
           <Text style={styles.title}>Vagas</Text>
 
-          { startup.vagas 
+          { startup.jobs 
           
           ? 
             this.state.vagas.map(vaga => {
               return(
-                <View style={{ flexDirection: 'row', width: '100%', marginTop: 10 }}>
-                  <Text style={styles.job}>{ `${vaga} \n` }</Text>
+                <View key={vaga} style={{ flexDirection: 'row', width: '100%', marginTop: 10 }}>
+                  <TextInput style={styles.job}>{ `${vaga} \n` }</TextInput>
                   <TouchableOpacity 
                     style={{ marginLeft: 10 }}
                     onPress={()=>this.handleExcludeJob(vaga)}
@@ -113,12 +140,14 @@ export default class Startup extends Component {
 
         <View>
           <Text style={styles.title}>Applies</Text>
-          <ProfileCard />
-          <ProfileCard />
-          <ProfileCard />
-          <ProfileCard />
-          <ProfileCard />
-          <ProfileCard />
+          {startup.applies.size !== 0 
+          
+          ? startup.applies.map(apply => {
+              return (<ProfileCard key={apply._id} apply={apply} />);
+            })
+          
+          : (<Text style={styles.empty}>Opa ...</Text>)
+          }
           <View style={{ height: 50, }} />
         </View>
         

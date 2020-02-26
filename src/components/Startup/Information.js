@@ -2,9 +2,19 @@ import React, { Component } from 'react';
 
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { Feather } from "@expo/vector-icons";
+import api from './../../services/api';
 // import { Container } from './styles';
 
 export default class Information extends Component {
+    state = { 
+        responsible: [],
+    }
+
+    componentDidMount() {
+  
+    }
+
+
   render() {
     const { startup } = this.props;
 
@@ -17,7 +27,7 @@ export default class Information extends Component {
                         <Feather name="edit" size={15} color="#2B93B6"/>
                     </TouchableOpacity>
                 </View>
-                <Text style={styles.text}>{ startup.nome }</Text>
+                <Text style={styles.text}>{ startup.name }</Text>
             </View>
 
 
@@ -28,7 +38,7 @@ export default class Information extends Component {
                         <Feather name="edit" size={15} color="#2B93B6"/>
                     </TouchableOpacity>
                 </View>
-                <Text style={styles.text}>{ startup.descricao }</Text>
+                <Text style={styles.text}>{ startup.bio }</Text>
             </View>
 
             <View style={styles.topicContainer}>
@@ -38,17 +48,17 @@ export default class Information extends Component {
                         <Feather name="edit" size={15} color="#2B93B6"/>
                     </TouchableOpacity>
                 </View>
-                <Text style={styles.text}>{ startup.categorias.join('\n') }</Text>
+                <Text style={styles.text}>{ startup.categories.join('\n') }</Text>
             </View>
 
             <View style={styles.topicContainer}>
                 <View style={{ flexDirection: 'row' }}>
                     <Text style={styles.title}>Responsáveis</Text>
-                    <TouchableOpacity style={{ marginLeft: 30, }}>
+                    <TouchableOpacity onPress={() => {log()}} style={{ marginLeft: 30, }}>
                         <Feather name="edit" size={15} color="#2B93B6"/>
                     </TouchableOpacity>
                 </View>
-                <Text style={styles.text}>{ startup.responsaveis }</Text>
+                <Text style={styles.text}>{ startup.responsible }</Text>
             </View>
 
         </View>

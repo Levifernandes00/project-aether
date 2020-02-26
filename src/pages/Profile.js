@@ -43,9 +43,23 @@ export default class Profile extends Component {
 
   async getUser(){
     const id = await AsyncStorage.getItem("user");
+    this.getPhoto(id);
     this.setState({ uid: id });
   }
   
+  async getPhoto(_id){
+    const response = await api.get('user',
+    {
+      headers: {id: _id}
+    });
+
+    const { photoURL } = response.data;
+
+    if(photoURL){
+      this.setState({ imageURL: photoURL });
+    }
+  }
+
   async signOutUser() {
     firebase.auth().signOut();
     await AsyncStorage.clear();
@@ -67,7 +81,6 @@ export default class Profile extends Component {
     })
     .then(snapshot => {
       this.setState({ resume: snapshot.metadata.fullPath });
-      console.log(snapshot)
     })
     .catch(error => {
       throw error;
@@ -79,6 +92,7 @@ export default class Profile extends Component {
     const { granted } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
     
     if(granted) {
+      
       const { cancelled, uri } = await ImagePicker.launchImageLibraryAsync({
         allowsEditing: true,
         base64: true,
@@ -86,7 +100,17 @@ export default class Profile extends Component {
       });
       if (!cancelled) {
         this.setState({ imageURL: uri });
-       
+
+        const blob = await uriToBlob(uri);
+        const snapshot = await uploadToFirebase(blob, "image", this.state.uid);
+
+        const { fullPath } = snapshot.metadata;
+        
+        const response = await api.post(`user/${this.state.uid}/update`, {
+          photoURL: fullPath,
+        });
+
+        console.log(response.data);
       }
     }
   };
