@@ -6,6 +6,7 @@ import { Ionicons, Feather } from '@expo/vector-icons'
 
 import ProfileCard from "../components/Startup/ProfileCard";
 import Information from '../components/Startup/Information';
+import Jobs from '../components/Startup/Jobs';
 import api from './../services/api';
 
 
@@ -15,8 +16,7 @@ export default class Startup extends Component {
   state = {
     visible: false,
     animation: new Animated.Value(0),
-    vagas: [],
-    textInput:[],
+    
   }
 
   componentDidMount() {
@@ -36,10 +36,7 @@ export default class Startup extends Component {
   }
 
   async save() {
-    await api.post(`startup/${this.props.navigation.state.params.startup._id}/update`,
-    {
-      jobs: this.state.vagas,
-    });
+    
   }
 
   showInformation() {
@@ -53,19 +50,7 @@ export default class Startup extends Component {
       useNativeDriver: true,
     }).start();
   }
-  
-  handleExcludeJob(text) {
-    const novasVagas = 
-    this.state.vagas.filter(vaga => {
-      return vaga !== text
-    });
-
-    this.setState({ vagas: novasVagas });
-  }
-
-  addJob(key){
-
-  }
+ 
 
   render() {
     const { navigation } = this.props
@@ -108,34 +93,8 @@ export default class Startup extends Component {
         }
 
         <View style={styles.topicContainer}>
-          <Text style={styles.title}>Vagas</Text>
-
-          { startup.jobs 
-          
-          ? 
-            this.state.vagas.map(vaga => {
-              return(
-                <View key={vaga} style={{ flexDirection: 'row', width: '100%', marginTop: 10 }}>
-                  <TextInput style={styles.job}>{ `${vaga} \n` }</TextInput>
-                  <TouchableOpacity 
-                    style={{ marginLeft: 10 }}
-                    onPress={()=>this.handleExcludeJob(vaga)}
-                  >
-                      <Ionicons name="md-close" size={15} color="#999"/>
-                  </TouchableOpacity>
-                </View>
-              )
-            })
-          :
-            (<Text style={styles.empty}>Opa ...</Text>)
-          }
-
-          <TouchableOpacity 
-            style={{ width: 40, height: 20, backgroundColor: '#2B93B6', justifyContent: 'center', alignItems: 'center' }}
-          >
-            <Ionicons name="ios-add" color="#FFFF" size={20} />
-          </TouchableOpacity>
-          
+          <Text style={styles.title}>Vagas</Text>        
+          <Jobs jobs={startup.jobs} id={startup._id} />
         </View>
 
         <View>

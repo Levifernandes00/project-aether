@@ -28,12 +28,8 @@ export default class Profile extends Component {
         const query = this.getQuery();
 
 
-        const response = await api.post('/updateUser', {
+        const response = await api.post(`/user/${this.state.uid}/update`, {
             [query]: this.state.value,
-        },
-        {
-            headers: this.state.uid,
-            mode: 'cors',
         })
 
         console.log(response.data);

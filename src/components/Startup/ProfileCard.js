@@ -22,8 +22,6 @@ export default class ProfileCard extends Component {
             headers: {id: _id},
         });
 
-        console.log(response.data);
-
        this.setState({ apply: response.data });
     }
 

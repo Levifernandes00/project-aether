@@ -11,7 +11,24 @@ export default class Information extends Component {
     }
 
     componentDidMount() {
-  
+        this.getResponsible();
+    }
+
+    async getResponsible(){
+        const { responsible } = this.props.startup;
+        var responsibleUsers = [];
+        
+        responsible.forEach(async resp => {
+            const response = await api.get('/user', {
+                headers: {id: resp}
+            });
+
+            responsibleUsers.push(response.data.email);
+            this.setState({ responsible: responsibleUsers });
+        });
+
+        
+
     }
 
 
@@ -58,7 +75,7 @@ export default class Information extends Component {
                         <Feather name="edit" size={15} color="#2B93B6"/>
                     </TouchableOpacity>
                 </View>
-                <Text style={styles.text}>{ startup.responsible }</Text>
+                <Text style={styles.text}>{ this.state.responsible.join('\n') }</Text>
             </View>
 
         </View>

@@ -45,6 +45,33 @@ export function uploadToFirebase(blob, content, uid) {
     });
 }
 
+export function getFileFromFirebase(uid, content) {
+  let type;
+  if(content === "resume")
+      type = "pdf";
+  else
+      type = "jpg"
+
+  return new Promise((resolve, reject)=>{
+    var storageRef = firebase.storage().ref();
+    storageRef.child(`${uid}s/${content}.${type}`).getDownloadURL().then(function(url) {
+    
+      var xhr = new XMLHttpRequest();
+      xhr.responseType = 'blob';
+      xhr.onload = function(event) {
+        var blob = xhr.response;
+      };
+      xhr.open('GET', url);
+      xhr.send();
+
+      var img = document.getElementById('myimg');
+      img.src = url;
+    }).catch(function(error) {
+      // Handle any errors
+    });
+  });
+}
+
 export function linkResume(uid, resumePath) {
     firebase.firestore()
         .collection("Users")
