@@ -1,22 +1,32 @@
 import React, { Component } from 'react';
 
-import { View, Text, StyleSheet, Image} from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { withNavigation } from 'react-navigation';
 
 // import { Container } from './styles';
 
-export default class CategoryCard extends Component {
+class CategoryCard extends Component {
+
+
   render() {
+    const { navigation, title, imageURI } = this.props;
+
     return (
-      <View style={styles.card}>
+      <TouchableOpacity 
+        style={styles.card}
+        onPress={() => navigation.navigate("Search", { category: title })}
+      >
         <Image 
-          source={{ uri: `${this.props.imageURI}`  }}
+          source={{ uri: `${imageURI}`  }}
           style={styles.image}  
         />
-        <Text style={styles.text}>{this.props.title}</Text>
-      </View>
+        <Text style={styles.text}>{title}</Text>
+      </TouchableOpacity>
     );
   }
 }
+
+module.exports = withNavigation(CategoryCard);
 
 
 const styles = StyleSheet.create({

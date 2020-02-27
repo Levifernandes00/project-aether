@@ -13,9 +13,19 @@ import Manager from "./pages/Manager";
 import Profile from "./pages/Profile";
 import Loading from "./pages/Loading";
 import Startup from "./pages/Startup";
+import Search from "./pages/Search";
 
 
 
+const homeStack = createStackNavigator(
+    {
+        Home,
+        Search,
+    },
+    {
+        headerMode: 'none',
+    }
+);
 
 
 const authStack = createStackNavigator(
@@ -42,7 +52,7 @@ const managerStack = createStackNavigator(
 const appTab = createBottomTabNavigator(
     {
         Manager: managerStack,
-        Home,
+        Home: homeStack,
         Profile,
     },
     {

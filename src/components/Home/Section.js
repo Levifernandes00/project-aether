@@ -18,14 +18,15 @@ export default class Section extends Component {
   }
 
   componentDidMount(){
-    this.setStartupList();
+
+    this.setStartupList(this.props);
 
     this._isMounted = true;
   }
   
   componentDidUpdate(prevProps, prevState) {
     if(prevState.startupList !== this.state.startupList && this._isMounted){
-      this.setStartupList();
+      this.setStartupList(this.props);
     }
   }
 
@@ -34,12 +35,26 @@ export default class Section extends Component {
   }
 
 
-  async setStartupList() {
+  async setStartupList(props) {
     const uid = await AsyncStorage.getItem("user");
-    
-    const response = await api.get('/startups', {
+    let route = '/startups';
+
+    if(props !== undefined){
+      const { category, search } = props;
+
+      if(category){
+        route += `/${category}`;
+        
+      }
+      else if (search){
+        route += `/${search}`
+      }
+    }
+
+    const response = await api.get(route, {
       headers: {userid: uid},
     });
+
     this.setState({ startupList: response.data })
   }
 

@@ -3,8 +3,9 @@ import { View, Modal, StyleSheet, TouchableOpacity, Image, Text, AsyncStorage } 
 import { Ionicons } from '@expo/vector-icons'
 
 import api from './../services/api';
+import { withNavigation } from 'react-navigation';
 
-export default class StartupDescription extends Component {
+class StartupDescription extends Component {
   state = {
     modalVisible: false,
   }
@@ -28,7 +29,7 @@ export default class StartupDescription extends Component {
   }
 
   render() {
-    const { startup } = this.props;
+    const { startup, navigation } = this.props;
     return (
 
         <Modal
@@ -55,7 +56,14 @@ export default class StartupDescription extends Component {
                     ?
                       startup.categories.map(category => {
                         return(
-                          <TouchableOpacity key={category} style={styles.categoryButton}>
+                          <TouchableOpacity 
+                            onPress={() => {
+                              navigation.navigate('Search', { category });
+                              this.setState({ modalVisible: false });
+                            }} 
+                            key={category} 
+                            style={styles.categoryButton}
+                          >
                             <Text style={styles.category}>{category}</Text>
                           </TouchableOpacity>
                         )
@@ -84,6 +92,8 @@ export default class StartupDescription extends Component {
     );
   }
 }
+
+module.exports = withNavigation(StartupDescription);
 
 const styles = StyleSheet.create({
   container:{
