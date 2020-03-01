@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 
 import { View, StyleSheet, Image, Text, TouchableOpacity } from 'react-native';
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
+import { Linking } from 'expo';
 
-import api from './../../services/api';
+import api, { BASE_URL } from './../../services/api';
 
 // import { Container } from './styles';
 
@@ -25,38 +26,61 @@ export default class ProfileCard extends Component {
        this.setState({ apply: response.data });
     }
 
-    render() {
-        const { photoURL, name, phoneNumber, resume } = this.state.apply; 
-
-        return (
-            <View style={styles.container}>
-                <View style={styles.avatarContainer}>
-                    <Image 
-                        source={{ uri: `${photoURL}`}} 
-                        style={styles.avatar}    
-                    />
-                </View>
-
-                <View style={styles.middleSection}>
-                    <Text style={styles.nome}>{name}</Text>
-                    <TouchableOpacity style={styles.resumeButton}>
-                        <Text style={styles.resumeText}>resumé</Text>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.endSection}>
-                    <TouchableOpacity 
-                        style={{ width: '70%', alignItems: 'flex-end', marginTop: 5, }}>
-                        <Ionicons name="md-close" size={15} color="#999"/>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={styles.whatsButton}>
-                        <FontAwesome name="whatsapp" size={30} color="#403BEB" />
-                    </TouchableOpacity>
-                </View>            
-
-            </View>
+    async deleteApply() {
+    
+        const response = api.post(`/startup/${this.props.startupid}/deleteApply`, 
+          null,
+          {
+            headers: { userid: this.state.apply._id }
+          }
         );
+        
+        this.setState({ apply: null });
+      }
+
+    render() {
+        const { apply } = this.state;
+        
+        
+        if(apply){
+            const { photoURL, name, phoneNumber, resumeURL } = apply; 
+            return (
+                <View style={styles.container}>
+                    <View style={styles.avatarContainer}>
+                        <Image 
+                            source={{ uri: `${BASE_URL}${photoURL}`}} 
+                            style={styles.avatar}    
+                        />
+                    </View>
+    
+                    <View style={styles.middleSection}>
+                        <Text style={styles.nome}>{name}</Text>
+                        <TouchableOpacity onPress={() => Linking.openURL(`${BASE_URL}${resumeURL}`)} style={styles.resumeButton}>
+                            <Text style={styles.resumeText}>resumé</Text>
+                        </TouchableOpacity>
+                    </View>
+    
+                    <View style={styles.endSection}>
+                        <TouchableOpacity 
+                            onPress={() => this.deleteApply()}
+                            style={{ width: '70%', alignItems: 'flex-end', marginTop: 5, }}>
+                            <Ionicons name="md-close" size={15} color="#999"/>
+                        </TouchableOpacity>
+    
+                        <TouchableOpacity
+                          onPress={() => Linking.openURL('whatsapp://send?phone=55'+phoneNumber)}
+                          style={styles.whatsButton}
+                        >
+                            <FontAwesome name="whatsapp" size={30} color="#403BEB" />
+                        </TouchableOpacity>
+                    </View>           
+    
+                </View>
+            );
+        }
+
+        else return(<View />);
+        
     }
 }
 

@@ -7,10 +7,6 @@ import api from './../../services/api';
 export default class Section extends Component {
   _isMounted = false;
   
-  constructor() {
-    super();
-  }
-
   state = {
     uid: "",
     startupList: [],
@@ -47,7 +43,7 @@ export default class Section extends Component {
         
       }
       else if (search){
-        route += `/${search}`
+        route += `/search/${search}`
       }
     }
 
@@ -85,7 +81,6 @@ export default class Section extends Component {
 const styles = StyleSheet.create({
   container: {
     marginTop: 10,
-    marginRight: 20,
   },
 
   empty: {

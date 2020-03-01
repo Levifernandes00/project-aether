@@ -9,6 +9,8 @@ import Section from '../components/Home/Section';
 
 import api from './../services/api';
 
+console.ignoredYellowBox = true;
+
 export default class Register extends Component {
 
   state = {
@@ -32,8 +34,10 @@ export default class Register extends Component {
           <Text style={styles.title}>Categories</Text>
           <CategorySection />
 
-          <Text style={styles.title}>Startups available</Text>
-          <Section />
+          <View style={{ marginRight: 20, marginTop: 10 }}>
+            <Text style={styles.title}>Startups available</Text>
+            <Section />
+          </View>
         </ScrollView>
       </View>
     );

@@ -7,7 +7,7 @@ import * as Permissions from 'expo-permissions';
 
 import * as firebase from 'firebase';
 import { uriToBlob, uploadToFirebase, linkResume } from '../api/profileApi';
-import api from './../services/api';
+import api, { BASE_URL } from './../services/api';
 
 import Topic from './../components/Profile/Topic';
 
@@ -26,9 +26,9 @@ export default class Profile extends Component {
     uid: "",
     name: "",
     email: "",
-    phone: "",
+    phoneNumber: "",
     imageURL: "",
-    resume: "",
+    resume: "resume.pdf",
     
     modalVisible: false,
   }
@@ -38,25 +38,26 @@ export default class Profile extends Component {
     StatusBar.setHidden(true);
     const { displayName, email, phoneNumber } = firebase.auth().currentUser;
     this.getUser();
-    this.setState({ email, name: displayName, phone: phoneNumber,});
   }
 
   async getUser(){
     const id = await AsyncStorage.getItem("user");
-    this.getPhoto(id);
+    this.syncUser(id);
     this.setState({ uid: id });
   }
   
-  async getPhoto(_id){
+  async syncUser(_id){
     const response = await api.get('user',
     {
       headers: {id: _id}
     });
 
-    const { photoURL } = response.data;
+    let { photoURL, name, email, phoneNumber } = response.data;
+
+    photoURL= `${BASE_URL}${photoURL}`;
 
     if(photoURL){
-      this.setState({ imageURL: photoURL });
+      this.setState({ imageURL: photoURL, name, email, phoneNumber });
     }
   }
 
@@ -66,25 +67,25 @@ export default class Profile extends Component {
     this.props.navigation.navigate("Loading");
   } 
 
-  handleResumePress = () => {
-    DocumentPicker.getDocumentAsync({})
-    .then(result => {
+  handleResumePress = async () => {
+    const { uri } = await DocumentPicker.getDocumentAsync({ type: "application/pdf" })
+    
+    if(uri) {
+      const data = new FormData();
+        let filename = uri.split('/').pop();
 
-      if( result.type !== 'cancel'){
-        const { uri } = result;
-        return uriToBlob(uri);
-      }
-        
-    })
-    .then(blob => {
-      return uploadToFirebase(blob, "resume", this.state.uid);
-    })
-    .then(snapshot => {
-      this.setState({ resume: snapshot.metadata.fullPath });
-    })
-    .catch(error => {
-      throw error;
-    });
+        // Infer the type of the image
+       
+        data.append('file', {uri, type: 'application/pdf', name: `${filename}`})
+      
+        const post = await api.post('/postProfile', data, {
+          headers: {userid: this.state.uid}
+        });
+
+        this.setState({ resume: filename });
+        console.log(post);
+
+    }
   }
 
 
@@ -101,16 +102,19 @@ export default class Profile extends Component {
       if (!cancelled) {
         this.setState({ imageURL: uri });
 
-        const blob = await uriToBlob(uri);
-        const snapshot = await uploadToFirebase(blob, "image", this.state.uid);
+        const data = new FormData();
+        let filename = uri.split('/').pop();
 
-        const { fullPath } = snapshot.metadata;
-        
-        const response = await api.post(`user/${this.state.uid}/update`, {
-          photoURL: fullPath,
+        // Infer the type of the image
+       
+        data.append('file', {uri, type: 'image/jpeg', name: `${filename}`})
+      
+        const post = await api.post('/postProfile', data, {
+          headers: {userid: this.state.uid}
         });
 
-        console.log(response.data);
+        console.log(post);
+
       }
     }
   };
@@ -135,7 +139,7 @@ export default class Profile extends Component {
 
             <Topic title="Name" value={this.state.name} />            
             <Topic title="Email" value={this.state.email} />
-            <Topic title="Phone" value={this.state.phone}/>
+            <Topic title="Phone" value={this.state.phoneNumber}/>
 
             <View style={styles.topicContainer}>
               <Text style={styles.title}>Resume</Text>

@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { View, Text, Image, StyleSheet, StatusBar, TouchableOpacity, AsyncStorage } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'
 
-import api from './../services/api';
+import api, { BASE_URL } from './../services/api';
 
 
 export default class Register extends Component {
@@ -55,7 +55,7 @@ export default class Register extends Component {
                       }}
                     >
                       <View style={styles.startupContainer}>
-                        <Image source={{ uri: `${startup.imageURL}` }} style={styles.startupImage}/>
+                        <Image source={{ uri: `${BASE_URL}${startup.imageURL}` }} style={styles.startupImage}/>
                         <Text style={styles.startupName}>{startup.name}</Text>
                       </View>
                     </TouchableOpacity>

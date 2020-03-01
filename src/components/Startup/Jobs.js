@@ -5,6 +5,7 @@ import { Ionicons, Feather } from '@expo/vector-icons';
 
 import api from './../../services/api';
 
+console.ignoredYellowBox = true;
 
 export default class Startup extends Component {
   state = {
